@@ -3,7 +3,6 @@ package com.otamate.android.kotlinaac
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
@@ -24,17 +23,17 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel = ViewModelProviders.of(this)[MainViewModel::class.java]
 
-        mainViewModel.getProgressLiveData().observe(this, Observer<MainViewModel.ProgressData> { progress ->
+        mainViewModel.getProgressLiveData().observe(this, Observer<MainViewModel.ProgressData> { progressData ->
 
-            if (progress != null) {
-                Log.d(TAG, "Progress: " + progress.progress)
-                progressBar.progress = mainViewModel.getProgressData().progress
+            if (progressData != null) {
+                Log.d(TAG, "Progress: " + progressData.progress)
+                progressData.progress = mainViewModel.getProgressData().progress
             }
         })
 
-        mainViewModel.getViewStateLiveData().observe(this, Observer<MainViewModel.ViewStateData> { viewState ->
+        mainViewModel.getViewStateLiveData().observe(this, Observer<MainViewModel.ViewStateData> { viewStateData ->
 
-            Log.d(TAG, "View State: " + viewState!!)
+            Log.d(TAG, "View State: " + viewStateData!!)
 
             // UI changed due to user action, e.g. button click
             handleUIStateChange()
@@ -43,13 +42,13 @@ class MainActivity : AppCompatActivity() {
         // UI changed due to Activity reload
         handleUIStateChange()
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        fabRestart.setOnClickListener {
+            mainViewModel.setViewStateData(mainViewModel.getViewStateData().copy(isStarted = false, isFinished = false))
         }
 
         buttonBegin.setOnClickListener {
-            mainViewModel.setViewStateData(mainViewModel.getViewStateData().copy(isStarted = true))
+            mainViewModel.getProgressData().progress = 0
+            mainViewModel.setViewStateData(mainViewModel.getViewStateData().copy(isStarted = true, isFinished = false))
         }
     }
 
@@ -60,6 +59,12 @@ class MainActivity : AppCompatActivity() {
         } else {
             buttonBegin.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
+        }
+
+        if (mainViewModel.getViewStateLiveData().value!!.isFinished) {
+            fabRestart.visibility = View.VISIBLE
+        } else {
+            fabRestart.visibility = View.GONE
         }
     }
 

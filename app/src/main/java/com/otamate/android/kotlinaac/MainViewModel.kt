@@ -11,7 +11,8 @@ class MainViewModel : ViewModel() {
     private val TAG = "MainViewModel"
 
     data class ViewStateData (
-        var isStarted: Boolean = false
+        var isStarted: Boolean = false,
+        var isFinished: Boolean = false
     )
 
     data class ProgressData (
@@ -61,6 +62,8 @@ class MainViewModel : ViewModel() {
 
                 Log.d(TAG, "Progress: " + getProgressData().progress)
             }
+
+            liveDataViewStateData.postValue(getViewStateData().copy(isFinished = true))
             Log.d(TAG, "Done.")
         }
     }
