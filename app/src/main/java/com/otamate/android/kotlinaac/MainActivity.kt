@@ -27,7 +27,8 @@ class MainActivity : AppCompatActivity() {
 
             if (progressData != null) {
                 Log.d(TAG, "Progress: " + progressData.progress)
-                progressData.progress = mainViewModel.getProgressData().progress
+                progressBar.progress = mainViewModel.getProgressData().progress
+
             }
         })
 
