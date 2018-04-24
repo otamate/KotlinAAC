@@ -8,7 +8,9 @@ import kotlin.concurrent.thread
 
 class MainViewModel : ViewModel() {
 
-    private val TAG = "MainViewModel"
+    companion object {
+        private val TAG = "MainViewModel"
+    }
 
     data class ViewStateData (
         var isStarted: Boolean = false,
