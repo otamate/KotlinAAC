@@ -9,7 +9,7 @@ import kotlin.concurrent.thread
 class MainViewModel : ViewModel() {
 
     companion object {
-        private val TAG = "MainViewModel"
+        private const val TAG = "MainViewModel"
     }
 
     data class ViewStateData (
